@@ -5,7 +5,7 @@
 ```bash
 composer require moonshine/moonshine
 
-php artisan moonshine:install
+php artisan migrate:fresh
 
 php artisan moonshine:user
 ```
