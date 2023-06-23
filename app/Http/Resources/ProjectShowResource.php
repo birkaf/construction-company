@@ -15,26 +15,30 @@ class ProjectShowResource extends JsonResource
     public function toArray(Request $request): array
     {
         if ($this->prices) {
-            $fullConstructionPrices = [];
-            $withoutFinishingPrices = [];
+            $full_construction_prices = [];
+            $without_finishing_prices = [];
 
             foreach ($this->prices as $price) {
                 $size_id = $price->size_id;
                 $price_value = $price->price;
 
                 if ($price->size->is_full_price) {
-                    $fullConstructionPrices[] = [
+                    $full_construction_prices[] = [
                         'sizeId' => $size_id,
                         'price' => $price_value,
                     ];
                 } else {
-                    $withoutFinishingPrices[] = [
+                    $without_finishing_prices[] = [
                         'sizeId' => $size_id,
                         'price' => $price_value,
                     ];
                 }
             }
         }
+
+        $full_construction_details = explode("\r\n", $this->full_construction);
+        $without_finishing_details = explode("\r\n", $this->without_finishing);
+
         return [
             'id' => $this->id,
             'idCategory' => $this->category_id,
@@ -54,12 +58,12 @@ class ProjectShowResource extends JsonResource
             'constructionPeriod'=>$this->construction_period,
             'sizeOnPlan' => $this->size_on_plan,
             'complects' => [
-                'fullConstruction' => [$this->full_construction],
-                'withoutFinishing' => [$this->without_finishing]
+                'fullConstruction' => $full_construction_details,
+                'withoutFinishing' => $without_finishing_details
             ],
             'prices' => [
-                'fullConstruction' => $fullConstructionPrices,
-                'withoutFinishing' => $withoutFinishingPrices,
+                'fullConstruction' => $full_construction_prices,
+                'withoutFinishing' => $without_finishing_prices,
             ],
         ];
     }
